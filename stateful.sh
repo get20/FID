@@ -1,22 +1,22 @@
 #!/bin/bash
 
-windows_server="10.0.0.3"
-linux_server="10.0.0.4"
-laptop="10.0.1.2"
-desktop="10.0.2.2"
-dmz_zone="10.0.0.0/24"
-laptop_net="10.0.1.0/24"
-desktop_net="10.0.2.0/24"
-class_A_priv="10.0.0.0/8"
-class_B_priv="172.16.0.0/12"
-class_C_priv="192.168.0.0/16"
-class_D_multicast="224.0.0.0/4"
-class_E_reserved_net="240.0.0.0/5"
-LOOPBACK="127.0.0.1"
+windows_server = "10.0.0.3"
+linux_server = "10.0.0.4"
+laptop = "10.0.1.2"
+desktop = "10.0.2.2"
+dmz_zone = "10.0.0.0/24"
+laptop_net = "10.0.1.0/24"
+desktop_net = "10.0.2.0/24"
+class_A_priv = "10.0.0.0/8"
+class_B_priv = "172.16.0.0/12"
+class_C_priv = "192.168.0.0/16"
+class_D_multicast = "224.0.0.0/4"
+class_E_reserved_net = "240.0.0.0/5"
+LOOPBACK = "127.0.0.1"
 
 iptables -F
-iptables -A INPUT -i lo -j ACCEPT
-iptables -A OUTPUT -o lo -j ACCEPT
+iptables -A INPUT -i $LOOPBACK -j ACCEPT
+iptables -A OUTPUT -o $LOOPBACK -j ACCEPT
 
 # Accept established connections
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
