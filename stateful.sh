@@ -45,6 +45,13 @@ iptables -A OUTPUT -p tcp --sport 22 -j ACCEPT
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24 --sport 22 -j ACCEPT
 iptables -A OUTPUT -o eth1 -p tcp -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24 --dport 22 -j ACCEPT
 
+# Allow port 8900,3389 port forwarding and DNAT
+
+iptables -A FORWARD -i eth0 -o eth1 -p tcp -m multiport --dports 6900,3389  -j ACCEPT
+iptables -t nat -A PREROUTING -i eth0 -p tcp -m multiport --dports 6900,3389 -j DNAT --to-destination 10.0.0.3:3389
+iptables -t nat -A POSTROUTING -o eth1 -p tcp --dport 3389 -j SNAT --to-source 10.0.0.1
+
+
 # Log all new SSH
 iptables -I INPUT -p tcp --dport 22 -m limit --limit 2/s -j LOG
 
@@ -52,12 +59,12 @@ iptables -I INPUT -p tcp --dport 22 -m limit --limit 2/s -j LOG
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.4 --dport 120 -j ACCEPT
 
 #Allow ICMP echo request
-iptables -A INPUT -i eth0 -p icmp --icmp-type 8 -j ACCEPT
-iptables -A OUTPUT -o eth1 -p icmp --icmp-type 8 -j ACCEPT
+iptables -A INPUT -i eth0 -p icmp --icmp-type 8 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o eth1 -p icmp --icmp-type 8 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 
 #Allow Tracert from Windows Server
-iptables -A FORWARD -i eth1 -o eth0 -p icmp -s 10.0.0.3 -j ACCEPT
-iptables -A FORWARD -i eth0 -o eth1 -p icmp -d 10.0.0.3 -j ACCEPT
+iptables -A FORWARD -i eth1 -o eth0 -p icmp -s 10.0.0.3 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -p icmp -d 10.0.0.3 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
 iptables -t nat -A POSTROUTING -s 10.0.0.3 -o eth0 -j SNAT --to-source 128.39.120.112
 
 iptables -P INPUT DROP
