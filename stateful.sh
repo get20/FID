@@ -21,7 +21,7 @@ iptables -A OUTPUT -o lo -j ACCEPT
 #Your iptables commands here!
 
 # LOG SSH connections, see the logs in /var/log/kern.log
-iptables -I INPUT -p tcp --dport 22 -m limit --limit 2/s -j LOG
+#iptables -I INPUT -p tcp --dport 22 -m limit --limit 2/s -j LOG
 
 # Accept established connections
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
