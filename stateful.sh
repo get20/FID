@@ -77,7 +77,7 @@ iptables -t nat -A POSTROUTING -o eth1 -p tcp --dport 3389 -j SNAT --to-source 1
 iptables -I INPUT -p tcp --dport 22 -m limit --limit 2/s -j LOG
 
 # Allow UDP port 120
-iptables -A INPUT -i eth1 -p udp -s 10.0.0.4 --dport 120 -j ACCEPT
+iptables -A INPUT -i eth1 -p udp -s 10.0.0.4 --dport 120 -m conntrack --ctstate NEW -j ACCEPT
 
 #Allow ICMP echo request
 iptables -A INPUT -i eth0 -p icmp --icmp-type 8 -m conntrack --ctstate NEW -j ACCEPT
