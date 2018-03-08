@@ -45,18 +45,18 @@ iptables -A OUTPUT -p tcp --sport 22 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24 --sport 22 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A OUTPUT -o eth1 -p tcp -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24 --dport 22 -m conntrack --ctstate NEW -j ACCEPT
 
-# Open port for DNS, HPPT/HTTPS
+# Open port for DNS/HTTPS
 
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dports 53 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 53 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth0  -p tcp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --sports 53 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth0  -p udp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --sport 53  -m conntrack --ctstate NEW -j ACCEPT
-
+#Open HTTP
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dports 80 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 80 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth0  -p tcp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --sports 80 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth0  -p udp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --sport 80  -m conntrack --ctstate NEW -j ACCEPT
-
+#Open HTTPS
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dports 443 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 443 -m conntrack --ctstate NEW -j ACCEPT
 iptables -A INPUT -i eth0  -p tcp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --sports 443 -m conntrack --ctstate NEW -j ACCEPT
@@ -64,7 +64,7 @@ iptables -A INPUT -i eth0  -p udp -s 0/0 -d 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,
 
 
 # Open access to Apache
-iptables -A INPUT -i eth0 -p tcp -s 0/0 --dport 80 -m conntrack --ctstate NEW -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp -s 0/0 --dport 80  -m conntrack --ctstate NEW -j ACCEPT
 
 # Allow port 8900,3389 port forwarding and DNAT
 iptables -A FORWARD -i eth0 -o eth1 -p tcp --dports 6900 -m conntrack --ctstate NEW -j ACCEPT
