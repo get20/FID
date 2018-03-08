@@ -22,15 +22,15 @@ iptables -A OUTPUT -o $LOOPBACK -j ACCEPT
 iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 iptables -A OUTPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 #SSH rule
-iptables -A INPUT -i eth0 -p tcp --dport 22 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
-iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -i eth0 -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED,RELATED -j ACCEPT
+iptables -A OUTPUT -o eth0 -p tcp --sport 22 -m conntrack --ctstate NEW,ESTABLISHED,RELATED -j ACCEPT
 
 #Allow DNS, HTTP,and HTTPS
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 53 -m conntrack --ctstate NEW, ESTABLISHED -j ACCEPT
 iptables -A INPUT -i eth1 -p udp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 80 -m conntrack --ctstate NEW, ESTABLISHED -j ACCEPT
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16  --dports 53 -m conntrack --ctstate NEW,ESTABLISHED  -j ACCEPT
 iptables -A INPUT -i eth1 -p tcp -s 10.0.0.0/24,10.0.2.0/24,10.0.1.0/24,128.39.120.0/16 --dport 80 -m conntrack --ctstate NEW, ESTABLISHED -j ACCEPT
-#Logging and invalid attempt
+#Logging and Dropping invalid attempt
 iptables -A INPUT -m state --state INVALID -j LOG
 iptables -A INPUT -m state --state INVALID -j DROP
 iptables -A OUTPUT -m state --state INVALID -j LOG
