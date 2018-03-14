@@ -66,7 +66,7 @@ $IPT -A SSH -j DROP
 
 ################ FTP Chain ########################
 $IPT -A FTP -p tcp -s $desktop_net --syn -o eth0 -j ACCEPT
-$IPT -A FTP -p tcp -s $desktop_net -m state --state ESTABLISHED,RELATED -j ACCE$
+$IPT -A FTP -p tcp -s $desktop_net -m state --state ESTABLISHED,RELATED -j ACCEPT
 $IPT -A FTP -j DROP
 ###################################################
 
@@ -82,11 +82,11 @@ $IPT -A FORWARD -p tcp --dport 22 --syn -j SSH
 $IPT -A FORWARD -p tcp -m multiport --dports 20,21,1024 -j FTP
 $IPT -A FORWARD -p tcp --dport 3306 -j MYSQL
 $IPT -A FORWARD -p tcp --sport 3306 -i eth1 -j MYSQL
-$IPT -A FORWARD -p udp --dport 1415 -s 10.0.0.1,$windows_server -d $desktop -j $
-$IPT -A FORWARD -p udp --dport 1415 -s $desktop -d $windows_server,10.0.0.1 -j $
+$IPT -A FORWARD -p udp --dport 1415 -s 10.0.0.1,$windows_server -d $desktop -j ACCEPT
+$IPT -A FORWARD -p udp --dport 1415 -s $desktop -d $windows_server,10.0.0.1 -j ACCEPT
 $IPT -A FORWARD -p udp --dport 53 -s $desktop_net,$laptop_net -j ACCEPT
 $IPT -A FORWARD -p udp --sport 53 -d $desktop_net,$laptop_net -i eth0 -j ACCEPT
-
+$IPT -A FORWARD -p tcp -i eth2 -o eth0 -s $desktop_net --match multiport --dports 80,443 -m state --state NEW -j ACCEPT
 #$IPT -A FORWARD -j DROP
 
 
